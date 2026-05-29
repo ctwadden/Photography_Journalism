@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RAW & Lightroom — Photo Editing Tutorial | Comm Tech 12</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=IBM+Plex+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1a18;
+    --paper: #f5f0e8;
+    --cream: #ede8dc;
+    --accent: #c41e0a;
+    --green: #2d7a4f;
+    --gold: #9a7c2f;
+    --blue: #1a5276;
+    --grey: #6b6b68;
+    --light: #d4cfc4;
+    --panel: #1e2632;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--paper); color: var(--ink); font-family: 'IBM Plex Sans', sans-serif; font-size: 15.5px; line-height: 1.7; }
+
+  /* MASTHEAD */
+  .masthead { background: var(--panel); color: var(--paper); padding: 48px 48px 40px; }
+  .course-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase; color: #6a7a8a; border-bottom: 1px solid #2a3444; padding-bottom: 10px; margin-bottom: 24px; display: inline-block; }
+  .masthead h1 { font-family: 'Playfair Display', serif; font-size: clamp(40px, 6vw, 72px); font-weight: 900; line-height: 0.92; letter-spacing: -0.02em; margin-bottom: 18px; }
+  .masthead h1 em { font-style: italic; color: #4a9fd4; }
+  .masthead-sub { font-size: 15px; color: #8a9aaa; font-weight: 300; max-width: 480px; }
+  .nav-strip { background: #4a9fd4; display: flex; overflow-x: auto; scrollbar-width: none; }
+  .nav-strip::-webkit-scrollbar { display: none; }
+  .nav-strip a { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.75); text-decoration: none; padding: 12px 16px; white-space: nowrap; border-right: 1px solid rgba(255,255,255,0.12); transition: all 0.15s; }
+  .nav-strip a:hover { color: #fff; background: rgba(255,255,255,0.1); }
+
+  .wrap { max-width: 960px; margin: 0 auto; padding: 0 48px 80px; }
+
+  .section { padding: 56px 0 44px; border-bottom: 1px solid var(--light); }
+  .section:last-child { border-bottom: none; }
+  .sec-label { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); margin-bottom: 6px; display: flex; align-items: center; gap: 10px; }
+  .sec-label::after { content: ''; flex: 0 0 32px; height: 1px; background: var(--accent); }
+  .sec-title { font-family: 'Playfair Display', serif; font-size: clamp(24px, 3.5vw, 38px); font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; margin-bottom: 24px; }
+  .sec-title em { font-style: italic; color: var(--grey); }
+
+  .prose p { font-size: 15px; line-height: 1.8; color: #2a2a28; margin-bottom: 14px; max-width: 620px; }
+
+  /* RAW COMPARISON */
+  .raw-compare { display: grid; grid-template-columns: 1fr 1fr; gap: 3px; margin: 28px 0; background: var(--light); }
+  @media (max-width: 560px) { .raw-compare { grid-template-columns: 1fr; } }
+  .raw-col { padding: 22px; background: var(--cream); }
+  .raw-col h3 { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; padding-bottom: 8px; margin-bottom: 12px; }
+  .raw-col.win h3 { border-bottom: 2px solid var(--green); color: var(--green); }
+  .raw-col.lose h3 { border-bottom: 2px solid var(--grey); color: var(--grey); }
+  .raw-col ul { list-style: none; padding: 0; }
+  .raw-col li { font-size: 13.5px; line-height: 1.65; padding: 6px 0; border-bottom: 1px solid var(--light); display: flex; gap: 9px; }
+  .raw-col li:last-child { border-bottom: none; }
+  .li-i { font-size: 13px; flex-shrink: 0; }
+
+  /* HISTOGRAM EXPLAINER */
+  .histo-wrap { display: flex; gap: 24px; margin: 28px 0; flex-wrap: wrap; }
+  .histo-card { flex: 1; min-width: 220px; background: #fff; border: 1px solid var(--light); border-top: 3px solid var(--ink); padding: 18px; }
+  .histo-vis { height: 80px; background: #111; margin-bottom: 12px; position: relative; overflow: hidden; border-radius: 2px; }
+  /* underexposed */
+  .h-under::before { content: ''; position: absolute; bottom: 0; left: 0; width: 45%; height: 90%; background: linear-gradient(to top, rgba(255,255,255,0.6), rgba(255,255,255,0.1)); border-radius: 2px 2px 0 0; }
+  /* overexposed */
+  .h-over::before { content: ''; position: absolute; bottom: 0; right: 0; width: 45%; height: 90%; background: linear-gradient(to top, rgba(255,255,255,0.6), rgba(255,255,255,0.1)); border-radius: 2px 2px 0 0; }
+  /* correct */
+  .h-good::before { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 55%; height: 85%; background: linear-gradient(to top, rgba(255,255,255,0.65), rgba(255,255,255,0.05)); border-radius: 2px 2px 0 0; }
+  .histo-label { font-family: 'IBM Plex Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 4px; }
+  .histo-card p { font-size: 13px; line-height: 1.6; color: #3a3a38; }
+
+  /* WORKFLOW STEPS */
+  .steps { margin-top: 28px; }
+  .step { display: grid; grid-template-columns: 60px 1fr; gap: 20px; padding: 20px 0; border-bottom: 1px solid var(--light); align-items: start; }
+  .step:last-child { border-bottom: none; }
+  .step-num { width: 48px; height: 48px; background: var(--panel); color: var(--paper); font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .step-body h4 { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--grey); margin-bottom: 3px; }
+  .step-body h3 { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 8px; }
+  .step-body p { font-size: 14px; line-height: 1.7; color: #3a3a38; margin-bottom: 8px; }
+  .pill { display: inline-block; background: var(--panel); color: #aac4e0; font-family: 'IBM Plex Mono', monospace; font-size: 11px; padding: 3px 8px; margin: 2px 2px 2px 0; }
+  .tip { background: #eaf4ea; border-left: 3px solid var(--green); padding: 10px 14px; margin-top: 10px; font-size: 13px; line-height: 1.6; color: #1a3a28; }
+  .warning { background: #fdf0ee; border-left: 3px solid var(--accent); padding: 10px 14px; margin-top: 10px; font-size: 13px; line-height: 1.6; color: #3a1a18; }
+
+  /* SLIDERS VISUAL */
+  .sliders-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
+  .slider-card { background: var(--panel); padding: 16px; }
+  .slider-card .s-name { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: #8aaccb; margin-bottom: 8px; }
+  .slider-bar { height: 4px; background: #2a3444; margin-bottom: 4px; position: relative; border-radius: 2px; }
+  .slider-fill { height: 4px; border-radius: 2px; }
+  .slider-thumb { width: 10px; height: 10px; border-radius: 50%; background: #fff; position: absolute; top: -3px; transform: translateX(-50%); }
+  .slider-card .s-range { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: #4a5a6a; display: flex; justify-content: space-between; }
+  .slider-card p { font-size: 12px; line-height: 1.5; color: #8a9aaa; margin-top: 8px; }
+
+  /* EXERCISE */
+  .exercise { background: var(--ink); color: var(--paper); padding: 32px 36px; margin: 28px 0; }
+  .exercise h3 { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 6px; }
+  .exercise .ex-sub { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: #666; margin-bottom: 20px; }
+  .ex-scenarios { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 4px; }
+  @media (max-width: 600px) { .ex-scenarios { grid-template-columns: 1fr; } }
+  .scenario { background: #252525; padding: 16px; border-top: 3px solid var(--grey); }
+  .scenario.s-a { border-top-color: #4a9fd4; }
+  .scenario.s-b { border-top-color: var(--gold); }
+  .scenario.s-c { border-top-color: var(--green); }
+  .scenario h4 { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; color: #888; margin-bottom: 8px; }
+  .scenario .sc-title { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--paper); margin-bottom: 8px; }
+  .scenario p { font-size: 13px; line-height: 1.6; color: #aaa; margin-bottom: 10px; }
+  .scenario ul { list-style: none; padding: 0; }
+  .scenario li { font-size: 12.5px; line-height: 1.6; color: #888; padding-left: 14px; position: relative; margin-bottom: 2px; }
+  .scenario li::before { content: '→'; position: absolute; left: 0; color: #555; font-size: 11px; }
+  .ex-submit { margin-top: 20px; background: #252525; padding: 16px 18px; border-left: 3px solid var(--accent); }
+  .ex-submit h4 { font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--accent); margin-bottom: 8px; }
+  .ex-submit ul { list-style: none; padding: 0; }
+  .ex-submit li { font-size: 13.5px; line-height: 1.7; color: #ccc; padding-left: 16px; position: relative; }
+  .ex-submit li::before { content: '·'; position: absolute; left: 0; color: #666; }
+
+  /* EXPORT GUIDE */
+  .export-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+  @media (max-width: 560px) { .export-grid { grid-template-columns: 1fr; } }
+  .export-block { background: var(--cream); border-top: 3px solid var(--ink); padding: 18px 20px; }
+  .export-block h3 { font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink); margin-bottom: 10px; }
+  .export-block ul { list-style: none; padding: 0; }
+  .export-block li { font-size: 13.5px; line-height: 1.7; color: #3a3a38; padding-left: 14px; position: relative; margin-bottom: 3px; }
+  .export-block li::before { content: '—'; position: absolute; left: 0; color: var(--grey); font-size: 11px; }
+
+  /* PULLQUOTE */
+  .pullquote { border-left: 4px solid #4a9fd4; padding: 12px 20px; margin: 24px 0; background: var(--cream); }
+  .pullquote p { font-family: 'Playfair Display', serif; font-size: 18px; font-style: italic; line-height: 1.5; max-width: 540px; }
+  .pullquote cite { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--grey); margin-top: 7px; font-style: normal; }
+
+  footer { background: var(--panel); color: #445; padding: 24px 48px; font-family: 'IBM Plex Mono', monospace; font-size: 10px; letter-spacing: 0.1em; text-align: center; }
+  footer span { color: #4a9fd4; }
+
+  @media (max-width: 560px) { .masthead, .wrap, footer { padding-left: 20px; padding-right: 20px; } }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="course-tag">Communications Technology 12 · Halifax West High School · Photography Unit — Adobe Lightroom Classic</div>
+  <h1>RAW &amp; <em>Lightroom</em></h1>
+  <p class="masthead-sub">A practical guide to shooting RAW and editing like a professional photojournalist — with Adobe Lightroom Classic.</p>
+</header>
+<nav class="nav-strip">
+  <a href="#why-raw">Why RAW</a>
+  <a href="#histogram">The Histogram</a>
+  <a href="#workflow">Step-by-Step Workflow</a>
+  <a href="#sliders">The Sliders</a>
+  <a href="#exercise">Practice Exercise</a>
+  <a href="#export">Export</a>
+  <a href="#ethics">Ethics Reminder</a>
+</nav>
+
+<div class="wrap">
+
+  <!-- WHY RAW -->
+  <section class="section" id="why-raw">
+    <div class="sec-label">Part 01</div>
+    <h2 class="sec-title">Why Shoot <em>RAW?</em></h2>
+    <div class="prose">
+      <p>Every professional photojournalist shoots in RAW format. This is not optional at the top level — it is standard practice at AP, Reuters, Getty Images, the New York Times, and every major publication in the world. Understanding why will make you a better photographer immediately — even before you touch Lightroom.</p>
+    </div>
+
+    <div class="pullquote">
+      <p>"Shooting RAW is like keeping the negative. JPEG is like getting someone else's print made from your negative."</p>
+      <cite>— Common wisdom in professional photography</cite>
+    </div>
+
+    <div class="raw-compare">
+      <div class="raw-col win">
+        <h3>RAW Format (.CR3, .NEF, .ARW)</h3>
+        <ul>
+          <li><span class="li-i">✓</span> Contains all data the sensor captured — nothing discarded</li>
+          <li><span class="li-i">✓</span> White balance fully adjustable after the fact with zero quality loss</li>
+          <li><span class="li-i">✓</span> Blown highlights and crushed shadows can be recovered</li>
+          <li><span class="li-i">✓</span> 12–14 bit colour depth (thousands more tones than JPEG)</li>
+          <li><span class="li-i">✓</span> Non-destructive editing — original file is never altered</li>
+          <li><span class="li-i">✓</span> Industry standard for professional delivery</li>
+          <li><span class="li-i">✗</span> Large file size (20–50MB per image)</li>
+          <li><span class="li-i">✗</span> Cannot be published directly — must be processed first</li>
+          <li><span class="li-i">✗</span> Requires Lightroom, Camera Raw, or similar software to open</li>
+        </ul>
+      </div>
+      <div class="raw-col lose">
+        <h3>JPEG Format</h3>
+        <ul>
+          <li><span class="li-i">✓</span> Small file size — easy to share and store</li>
+          <li><span class="li-i">✓</span> Ready to publish immediately out of camera</li>
+          <li><span class="li-i">✓</span> Opens on every device without special software</li>
+          <li><span class="li-i">✗</span> Camera throws away ~80% of captured data on save</li>
+          <li><span class="li-i">✗</span> White balance baked in — very difficult to fix after the fact</li>
+          <li><span class="li-i">✗</span> Blown highlights are permanently lost — no recovery possible</li>
+          <li><span class="li-i">✗</span> 8-bit colour — visible banding in skies and gradients</li>
+          <li><span class="li-i">✗</span> Each re-save degrades the file further (lossy compression)</li>
+          <li><span class="li-i">✗</span> Limited latitude for correction in post-production</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="prose" style="margin-top:16px;">
+      <p><strong>How to enable RAW on your camera:</strong> On most DSLRs and mirrorless cameras, go to <strong>Menu → Image Quality → RAW</strong> (or RAW + JPEG if you want both). On Canon cameras it's typically Menu → Image Quality. On Nikon, Menu → Shooting Menu → Image Quality. The exact path varies — check your camera manual or search "[your camera model] how to shoot RAW."</p>
+      <p>If you're using a smartphone, iPhone and many Android phones can shoot RAW via the native camera app (toggle on in Settings → Camera → Formats → Apple ProRAW on iPhone 12 Pro+) or through apps like Halide or Adobe Lightroom Mobile.</p>
+    </div>
+  </section>
+
+  <!-- HISTOGRAM -->
+  <section class="section" id="histogram">
+    <div class="sec-label">Part 02</div>
+    <h2 class="sec-title">Reading the <em>Histogram</em></h2>
+    <div class="prose">
+      <p>The histogram is the most important tool in Lightroom. It tells you the truth about your image's exposure — far more accurately than your screen, which can be misleading depending on brightness settings and ambient light. A professional photographer reads the histogram before they trust their eyes.</p>
+      <p>The histogram is a graph: the left edge is pure black (shadows), the right edge is pure white (highlights). The peaks show how much of your image lives at each brightness level. Your goal is a histogram that sits comfortably in the middle without slamming into either wall.</p>
+    </div>
+    <div class="histo-wrap">
+      <div class="histo-card">
+        <div class="histo-vis h-under"></div>
+        <div class="histo-label" style="color:var(--accent);">Underexposed</div>
+        <p>Most data piled up on the left. The image is too dark. Shadow detail is lost or "crushed." In RAW, you can often recover this — but not always. Better to expose correctly in camera.</p>
+      </div>
+      <div class="histo-card">
+        <div class="histo-vis h-over"></div>
+        <div class="histo-label" style="color:var(--gold);">Overexposed</div>
+        <p>Data slammed against the right wall. Highlights are "blown out" — permanently pure white. Even in RAW, if the sensor never captured the data, you can't recover it. A common mistake with bright skies.</p>
+      </div>
+      <div class="histo-card">
+        <div class="histo-vis h-good"></div>
+        <div class="histo-label" style="color:var(--green);">Well Exposed</div>
+        <p>The bulk of the data sits in the middle of the graph, with gradual tails on both ends. No data is slammed against either wall. This image has maximum editing latitude in Lightroom.</p>
+      </div>
+    </div>
+    <div class="tip"><strong>Pro tip:</strong> Enable "highlight clipping warnings" in Lightroom by pressing J. Blown-out areas will flash red. This makes it impossible to miss a problem before you export.</div>
+  </section>
+
+  <!-- WORKFLOW -->
+  <section class="section" id="workflow">
+    <div class="sec-label">Part 03</div>
+    <h2 class="sec-title">Step-by-Step <em>Lightroom Workflow</em></h2>
+    <div class="prose">
+      <p>Open your RAW file in Lightroom Classic → go to the <strong>Develop</strong> module (press D). Work through the panel on the right in the order below. The order matters — changes at the top affect everything below.</p>
+    </div>
+    <div class="steps">
+
+      <div class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <h4>Develop Module → Basic Panel</h4>
+          <h3>Import &amp; Set White Balance</h3>
+          <p>Before anything else, set your white balance. In RAW this is completely lossless — you're not degrading the image at all. Click the <strong>White Balance eyedropper</strong> (W key) and click on something that should be neutral white or grey in your scene — a white wall, a piece of paper, a grey card. Then fine-tune with the <strong>Temp</strong> (warm/cool) and <strong>Tint</strong> (green/magenta) sliders.</p>
+          <div><span class="pill">White Balance Selector (W)</span><span class="pill">Temperature</span><span class="pill">Tint</span></div>
+          <div class="tip"><strong>Quick start:</strong> The dropdown above the sliders offers presets (Daylight, Cloudy, Tungsten, Flash). Try the one that matches your shooting conditions — it's usually faster than the eyedropper for an approximate correction.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <h4>Basic Panel → Tone</h4>
+          <h3>Correct the Exposure</h3>
+          <p>Now address the overall brightness. Watch the histogram as you adjust. The <strong>Exposure</strong> slider moves everything up or down. Then use the individual tone controls to fine-tune each part of the tonal range independently.</p>
+          <div><span class="pill">Exposure</span><span class="pill">Highlights</span><span class="pill">Shadows</span><span class="pill">Whites</span><span class="pill">Blacks</span></div>
+          <p style="margin-top:10px;font-size:13.5px;color:#3a3a38;">The standard order: drag <strong>Highlights</strong> left (toward -100) to recover a blown sky. Drag <strong>Shadows</strong> right (toward +100) to open up dark areas without affecting bright areas. Set <strong>Whites</strong> and <strong>Blacks</strong> last — hold Alt/Option while dragging to see exactly where clipping starts.</p>
+          <div class="tip"><strong>The "S-Curve" of tonal adjustment:</strong> A common starting point — Highlights: -40, Shadows: +30, Whites: +15, Blacks: -10 — creates a gentle contrast lift that looks natural in most photojournalism situations.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <h4>Basic Panel → Presence</h4>
+          <h3>Add Contrast, Texture &amp; Clarity</h3>
+          <p>The <strong>Contrast</strong> slider deepens the difference between light and dark globally. Used subtly (±15 to ±25), it adds punch. The <strong>Clarity</strong> slider increases local mid-tone contrast — excellent for bringing out texture in skin, fabric, rock, bark, and brick. <strong>Texture</strong> is a finer-grained version of Clarity — great for subtle detail enhancement without the "crunchy" look Clarity can produce if overdone.</p>
+          <div><span class="pill">Contrast</span><span class="pill">Clarity</span><span class="pill">Texture</span><span class="pill">Vibrance</span></div>
+          <div class="warning"><strong>Photojournalism rule:</strong> If it visibly looks processed, you've gone too far. Keep Clarity under +30. Negative Clarity (-20 to -40) can beautifully smooth skin in portraiture while retaining a natural look. Avoid Vibrance boosts above +25 — they make images look artificially saturated.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <h4>Develop Panel → Crop Overlay</h4>
+          <h3>Crop &amp; Straighten</h3>
+          <p>Press <strong>R</strong> to open the Crop Overlay tool. Drag the corners to crop. Use the <strong>angle slider</strong> or drag outside the crop box to straighten a tilted horizon. The <strong>Auto</strong> button attempts to auto-straighten — it works well for clear horizons and architecture.</p>
+          <div><span class="pill">R — Crop Tool</span><span class="pill">Constrain to Image</span><span class="pill">Auto Straighten</span></div>
+          <div class="tip"><strong>Rule of thirds overlay:</strong> While the crop tool is active, press O to cycle through overlay guides including the rule of thirds grid. Use it to check your placement before confirming the crop.</div>
+          <div class="warning"><strong>Remember:</strong> Cropping is acceptable in photojournalism. Removing objects is not. The Crop tool is fine. The Healing Brush, Clone Stamp, and Content-Aware Fill are not for editorial work.</div>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <h4>Optional — Black &amp; White</h4>
+          <h3>Convert to Monochrome</h3>
+          <p>If your brief calls for it, converting to black and white can add weight and timelessness to a photograph. In Lightroom, go to <strong>Basic Panel → Treatment</strong> and select <strong>Black &amp; White</strong> — or press V. This gives you access to the <strong>B&W Mix</strong> panel, where you can independently brighten or darken specific colour ranges as they convert to grey. This is far more powerful than just desaturating in Photoshop.</p>
+          <div><span class="pill">V — B&W Toggle</span><span class="pill">B&W Mix Panel</span><span class="pill">Targeted Adjustment Tool</span></div>
+          <p style="margin-top:10px;font-size:13.5px;color:#3a3a38;">Common B&W adjustments: drag the <strong>Blue</strong> slider left to darken skies dramatically (classic photojournalism look). Drag <strong>Red</strong> right to brighten skin tones. Use the Targeted Adjustment Tool (click in the image and drag) to adjust whatever colour you're clicking on.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <h4>Optional — Noise Reduction</h4>
+          <h3>Clean Up High-ISO Images</h3>
+          <p>If you shot in low light with a high ISO (1600, 3200, 6400+), your image may show digital noise — a grainy, speckled texture especially visible in dark areas. In Lightroom, go to <strong>Detail Panel → Noise Reduction → Luminance</strong>. Drag it right until the noise becomes acceptable, then dial back until you're not losing too much fine detail. Start around 25–40.</p>
+          <div><span class="pill">Detail Panel</span><span class="pill">Luminance NR</span><span class="pill">Detail</span><span class="pill">Contrast</span></div>
+          <div class="tip"><strong>Lightroom AI Denoise (2023+):</strong> If you have a recent version of Lightroom Classic, try <strong>Denoise</strong> under the Detail panel. It uses AI to remove noise while preserving significantly more detail than the manual sliders. Click it, choose a strength, and wait ~30 seconds. It's remarkable on high-ISO images.</div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- SLIDERS VISUAL -->
+  <section class="section" id="sliders">
+    <div class="sec-label">Part 04</div>
+    <h2 class="sec-title">The Sliders — <em>Quick Reference</em></h2>
+    <div class="prose">
+      <p>The Basic panel sliders each control a specific part of the tonal range. This quick reference shows their typical range and what they do in plain language.</p>
+    </div>
+    <div class="sliders-grid">
+      <div class="slider-card">
+        <div class="s-name">Exposure</div>
+        <div class="slider-bar"><div class="slider-fill" style="width:60%;height:4px;background:#4a9fd4;"></div><div class="slider-thumb" style="left:60%;background:#4a9fd4;"></div></div>
+        <div class="s-range"><span>-5 EV</span><span>+5 EV</span></div>
+        <p>Overall image brightness. One stop = one full exposure change. Start here.</p>
+      </div>
+      <div class="slider-card">
+        <div class="s-name">Highlights</div>
+        <div class="slider-bar"><div class="slider-fill" style="width:25%;height:4px;background:#aaa;"></div><div class="slider-thumb" style="left:25%;background:#aaa;"></div></div>
+        <div class="s-range"><span>-100</span><span>+100</span></div>
+        <p>Controls only the brightest areas. Drag left to recover blown-out skies. Doesn't affect shadows.</p>
+      </div>
+      <div class="slider-card">
+        <div class="s-name">Shadows</div>
+        <div class="slider-bar"><div class="slider-fill" style="width:70%;height:4px;background:#5a8a6a;"></div><div class="slider-thumb" style="left:70%;background:#5a8a6a;"></div></div>
+        <div class="s-range"><span>-100</span><span>+100</span></div>
+        <p>Controls only the darkest areas. Drag right to open up dark areas without affecting bright areas.</p>
+      </div>
+      <div class="slider-card">
+        <div class="s-name">Whites</div>
+        <div class="slider-bar"><div class="slider-fill" style="width:60%;height:4px;background:#c8c8c8;"></div><div class="slider-thumb" style="left:60%;background:#c8c8c8;"></div></div>
+        <div class="s-range"><span>-100</span><span>+100</span></div>
+        <p>Sets the white point. Hold Alt/Option while dragging to see exactly where clipping starts.</p>
+      </div>
+      <div class="slider-card">
+        <div class="s-name">Blacks</div>
+        <div class="slider-bar"><div class="slider-fill" style="width:40%;height:4px;background:#2a3a4a;"></div><div class="slider-thumb" style="left:40%;background:#5a6a7a;"></div></div>
+        <div class="s-range"><span>-100</span><span>+100</span></div>
+        <p>Sets the black point. Drag left to make blacks deeper and add contrast. Alt/Option shows clipping.</p>
+      </div>
+      <div class="slider-card">
+        <div class="s-name">Contrast</div>
+        <div class="slider-bar"><div class="slider-fill" style="width:60%;height:4px;background:#9a7c4a;"></div><div class="slider-thumb" style="left:60%;background:#9a7c4a;"></div></div>
+        <div class="s-range"><span>-100</span><span>+100</span></div>
+        <p>Deepens the gap between light and dark globally. Keep it subtle in journalism (±20).</p>
+      </div>
+      <div class="slider-card">
+        <div class="s-name">Clarity</div>
+        <div class="slider-bar"><div class="slider-fill" style="width:65%;height:4px;background:#7a6a5a;"></div><div class="slider-thumb" style="left:65%;background:#9a8a7a;"></div></div>
+        <div class="s-range"><span>-100</span><span>+100</span></div>
+        <p>Mid-tone contrast. Adds punch to textures. Keep under +30 to avoid an "over-processed" look.</p>
+      </div>
+      <div class="slider-card">
+        <div class="s-name">Vibrance</div>
+        <div class="slider-bar"><div class="slider-fill" style="width:60%;height:4px;background:#4a7a9a;"></div><div class="slider-thumb" style="left:60%;background:#4a7a9a;"></div></div>
+        <div class="s-range"><span>-100</span><span>+100</span></div>
+        <p>Boosts muted colours more than already-saturated ones. Gentler than Saturation. Keep under +25.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXERCISE -->
+  <section class="section" id="exercise">
+    <div class="sec-label">Part 05</div>
+    <h2 class="sec-title">Practice <em>Exercise</em></h2>
+    <div class="prose">
+      <p>The best way to learn Lightroom is to fix a problem. Below are three scenarios — find or create an image that matches each one (or your teacher may provide sample images), then correct it using only the techniques covered in this tutorial.</p>
+    </div>
+
+    <div class="exercise">
+      <h3>Three Correction Challenges</h3>
+      <div class="ex-sub">Complete at least two of the three. Record your adjustments in your editing log.</div>
+      <div class="ex-scenarios">
+
+        <div class="scenario s-a">
+          <h4>Challenge A</h4>
+          <div class="sc-title">The Dark Interior</div>
+          <p>Find or shoot an interior photograph that is noticeably underexposed — taken in a cafeteria, classroom, or gym with mixed or low lighting. Your goal is to bring it to a naturally exposed-looking result.</p>
+          <ul>
+            <li>Correct white balance (interior light is usually warm/tungsten)</li>
+            <li>Lift Exposure and open Shadows without blowing highlights</li>
+            <li>Apply Noise Reduction if high ISO was needed</li>
+            <li>Record every adjustment with its value in your editing log</li>
+          </ul>
+        </div>
+
+        <div class="scenario s-b">
+          <h4>Challenge B</h4>
+          <div class="sc-title">The Blown Sky</div>
+          <p>Find or shoot an outdoor photograph where the sky is completely blown out — pure white with no cloud or sky detail. This is one of the most common problems in photography.</p>
+          <ul>
+            <li>Drag Highlights to -80 or lower and see how much detail returns</li>
+            <li>Compensate by lifting Shadows and Exposure slightly</li>
+            <li>Discuss in your log: was the sky recoverable, or was the data simply never captured?</li>
+            <li>Note the histogram before and after</li>
+          </ul>
+        </div>
+
+        <div class="scenario s-c">
+          <h4>Challenge C</h4>
+          <div class="sc-title">The Wrong Light</div>
+          <p>Find or shoot an image with clearly wrong white balance — taken under fluorescent school lighting (green-tinted), tungsten bulbs (very orange), or with the wrong preset selected in-camera.</p>
+          <ul>
+            <li>Use the White Balance eyedropper on a neutral area</li>
+            <li>Fine-tune with Temperature and Tint sliders</li>
+            <li>Compare the corrected version to the original</li>
+            <li>Convert to B&W and note how the tones change vs. the colour version</li>
+          </ul>
+        </div>
+
+      </div>
+      <div class="ex-submit">
+        <h4>What to Submit</h4>
+        <ul>
+          <li>The original RAW or JPEG file (before)</li>
+          <li>The exported corrected JPEG (after)</li>
+          <li>Your editing log entry for each challenge — adjustment name, value, and reason</li>
+          <li>One sentence: what did this challenge teach you that you'll apply in your photojournalism project?</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPORT -->
+  <section class="section" id="export">
+    <div class="sec-label">Part 06</div>
+    <h2 class="sec-title">Exporting <em>Your Final Images</em></h2>
+    <div class="prose">
+      <p>When your edits are done, you export a finished JPEG from Lightroom. The original RAW file is never touched. This is the non-destructive workflow — your "negative" is always preserved. Use the settings below for your photojournalism project submission.</p>
+    </div>
+    <div class="export-grid">
+      <div class="export-block">
+        <h3>Export Settings — Submission</h3>
+        <ul>
+          <li>File Format: <strong>JPEG</strong></li>
+          <li>Quality: <strong>90–100</strong></li>
+          <li>Color Space: <strong>sRGB</strong></li>
+          <li>Image Sizing: <strong>Long Edge 3000px minimum</strong> (or Don't Enlarge, full resolution)</li>
+          <li>Resolution: <strong>300 PPI</strong></li>
+          <li>Metadata: <strong>Copyright Only</strong></li>
+          <li>Filename: <strong>Brief01_LastName.jpg</strong></li>
+        </ul>
+      </div>
+      <div class="export-block">
+        <h3>File Naming Convention</h3>
+        <ul>
+          <li>Brief01_Smith.jpg</li>
+          <li>Brief02_Smith.jpg</li>
+          <li>Brief03_Smith.jpg</li>
+          <li>Keep all RAW originals in a folder named <strong>RAW_Originals_LastName</strong></li>
+          <li>Submit the RAW folder alongside your JPEG exports</li>
+          <li>Your RAW files are proof that no unethical manipulation occurred</li>
+        </ul>
+      </div>
+    </div>
+    <div class="tip" style="margin-top:20px;"><strong>Lightroom Catalogue backup:</strong> Go to Edit → Catalog Settings → Backup and set it to "Once a day, when exiting Lightroom." One corrupted catalogue losing your edit history is a lesson no one needs to learn the hard way.</div>
+  </section>
+
+  <!-- ETHICS REMINDER -->
+  <section class="section" id="ethics">
+    <div class="sec-label">Part 07</div>
+    <h2 class="sec-title">The Ethics <em>Reminder</em></h2>
+    <div class="prose">
+      <p>You now have access to powerful tools. This section is a reminder of where the professional line is — because Lightroom also contains tools that go beyond it.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:20px;">
+      <div style="background:#eaf4ea;border-top:3px solid var(--green);padding:18px 20px;">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--green);margin-bottom:8px;font-weight:600;">Use These Freely</p>
+        <ul style="list-style:none;padding:0;">
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#1a3a28;"><span style="position:absolute;left:0;">✓</span> Exposure, Highlights, Shadows, Whites, Blacks</li>
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#1a3a28;"><span style="position:absolute;left:0;">✓</span> White Balance (Temperature, Tint)</li>
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#1a3a28;"><span style="position:absolute;left:0;">✓</span> Contrast, Clarity, Texture, Vibrance</li>
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#1a3a28;"><span style="position:absolute;left:0;">✓</span> Crop and Straighten</li>
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#1a3a28;"><span style="position:absolute;left:0;">✓</span> Black &amp; White conversion</li>
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#1a3a28;"><span style="position:absolute;left:0;">✓</span> Noise Reduction</li>
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#1a3a28;"><span style="position:absolute;left:0;">✓</span> Lens Corrections (Remove Chromatic Aberration, Enable Profile Corrections)</li>
+        </ul>
+      </div>
+      <div style="background:#fdf0ee;border-top:3px solid var(--accent);padding:18px 20px;">
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:0.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;font-weight:600;">Do Not Use for Editorial Work</p>
+        <ul style="list-style:none;padding:0;">
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#3a1a18;"><span style="position:absolute;left:0;">✗</span> Healing Brush / Clone Stamp (removes objects)</li>
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#3a1a18;"><span style="position:absolute;left:0;">✗</span> Content-Aware Remove</li>
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#3a1a18;"><span style="position:absolute;left:0;">✗</span> Selective Hue/Saturation changes (changing colour of specific objects)</li>
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#3a1a18;"><span style="position:absolute;left:0;">✗</span> AI-generated sky replacements</li>
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#3a1a18;"><span style="position:absolute;left:0;">✗</span> Compositing (combining multiple images)</li>
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#3a1a18;"><span style="position:absolute;left:0;">✗</span> Extreme localized adjustments that change what an area looks like</li>
+          <li style="font-size:13.5px;line-height:1.7;padding-left:14px;position:relative;margin-bottom:3px;color:#3a1a18;"><span style="position:absolute;left:0;">✗</span> Photoshop Generative Fill on any area of the image</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <p>RAW &amp; Lightroom Tutorial · The Frame · Communications Technology 12 · Halifax West High School<br>
+  <span>Adobe Lightroom Classic · Curriculum Outcomes 2.3 · 2.4</span></p>
+</footer>
+
+</body>
+</html>
