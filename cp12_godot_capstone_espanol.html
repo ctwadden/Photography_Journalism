@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CP12 Godot Capstone — Guía del Estudio de Videojuegos</title>
+<style>
+
+/* ==========================================================
+   CP12 GODOT CAPSTONE — GOOGLE SITES SELF-CONTAINED STYLE
+   Paste this full HTML into a Google Sites Embed > Embed Code box.
+   No external CSS file is required.
+   ========================================================== */
+:root {
+  --bg: #0a1020;
+  --bg-2: #0f172a;
+  --surface: #ffffff;
+  --surface-2: #f4f7fb;
+  --surface-3: #eaf2ff;
+  --text: #172033;
+  --text-muted: #5c6b82;
+  --text-soft: #7890a8;
+  --border: #d8e1ee;
+  --border-strong: #b9c8dc;
+  --accent: #2563eb;
+  --accent-light: #1d4ed8;
+  --accent-soft: #dbeafe;
+  --cyan: #06b6d4;
+  --cyan-soft: #cffafe;
+  --green: #16a34a;
+  --green-soft: #dcfce7;
+  --orange: #f97316;
+  --orange-soft: #ffedd5;
+  --red: #dc2626;
+  --red-soft: #fee2e2;
+  --purple: #7c3aed;
+  --purple-soft: #ede9fe;
+  --pink: #db2777;
+  --pink-soft: #fce7f3;
+  --yellow: #ca8a04;
+  --yellow-soft: #fef9c3;
+  --code-bg: #0f172a;
+  --code-border: #24324b;
+  --shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
+  --shadow-soft: 0 10px 24px rgba(15, 23, 42, 0.10);
+  --radius-xl: 24px;
+  --radius-lg: 18px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
+  --sidebar-w: 292px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  color: var(--text);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+  line-height: 1.65;
+  background:
+    radial-gradient(circle at top left, rgba(37,99,235,0.25), transparent 34rem),
+    radial-gradient(circle at bottom right, rgba(6,182,212,0.18), transparent 30rem),
+    linear-gradient(135deg, #08111f 0%, #101827 42%, #162033 100%);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.38;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+  background-size: 36px 36px;
+  mask-image: linear-gradient(to bottom, black, transparent 85%);
+}
+
+a { color: var(--accent-light); text-decoration-thickness: 0.08em; text-underline-offset: 0.18em; }
+a:hover { color: var(--purple); }
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  background: rgba(15, 23, 42, 0.08);
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  padding: 0.12rem 0.32rem;
+  border-radius: 0.4rem;
+  font-size: 0.88em;
+  color: #0f172a;
+}
+
+.page-wrap {
+  width: min(1480px, 100%);
+  min-height: 100vh;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  gap: 1.4rem;
+  padding: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+/* -------------------- Sidebar -------------------- */
+.sidebar {
+  position: sticky;
+  top: 1.25rem;
+  align-self: start;
+  height: calc(100vh - 2.5rem);
+  overflow-y: auto;
+  padding: 1rem;
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: var(--radius-xl);
+  color: #e5efff;
+  background:
+    linear-gradient(180deg, rgba(15,23,42,0.96) 0%, rgba(17,24,39,0.93) 100%);
+  box-shadow: var(--shadow);
+}
+.sidebar::-webkit-scrollbar { width: 8px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.18); border-radius: 999px; }
+.sidebar-logo {
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  font-size: 1.34rem;
+  padding: 1rem 1rem 0.25rem;
+  color: #fff;
+}
+.sidebar-logo::before {
+  content: "🎮";
+  display: inline-grid;
+  place-items: center;
+  width: 2.35rem;
+  height: 2.35rem;
+  margin-right: 0.55rem;
+  border-radius: 0.9rem;
+  background: linear-gradient(135deg, var(--accent), var(--cyan));
+  box-shadow: 0 10px 24px rgba(37,99,235,0.32);
+  vertical-align: middle;
+}
+.sidebar-sub {
+  padding: 0 1rem 1rem;
+  color: #a8bdd8;
+  font-size: 0.84rem;
+  font-weight: 650;
+}
+.sidebar-section-label {
+  margin: 0.9rem 0.55rem 0.45rem;
+  color: #7dd3fc;
+  font-size: 0.68rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.sidebar-divider { height: 1px; margin: 0.85rem 0.4rem; background: rgba(255,255,255,0.12); }
+.sidebar nav { display: grid; gap: 0.36rem; }
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 0.64rem;
+  min-height: 2.7rem;
+  padding: 0.55rem 0.72rem;
+  border-radius: 0.9rem;
+  color: #d6e4f5;
+  text-decoration: none;
+  font-size: 0.91rem;
+  font-weight: 760;
+  border: 1px solid transparent;
+  transition: transform .16s ease, background .16s ease, border-color .16s ease;
+}
+.sidebar nav a:hover {
+  transform: translateX(2px);
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.10);
+}
+.sidebar nav a.active {
+  color: #fff;
+  background: linear-gradient(135deg, rgba(37,99,235,0.95), rgba(6,182,212,0.85));
+  box-shadow: 0 12px 24px rgba(6,182,212,0.18);
+}
+.nav-num {
+  display: inline-grid;
+  place-items: center;
+  min-width: 2rem;
+  height: 2rem;
+  border-radius: 0.75rem;
+  color: #eff6ff;
+  background: rgba(255,255,255,0.10);
+  font-weight: 900;
+  font-size: 0.72rem;
+  letter-spacing: 0.02em;
+}
+.sidebar nav a.active .nav-num { background: rgba(255,255,255,0.22); color: #fff; }
+
+/* -------------------- Main shell -------------------- */
+.main {
+  min-width: 0;
+  padding: 0.1rem 0 3rem;
+}
+.section {
+  display: none;
+  animation: sectionFade .25s ease-out;
+}
+.section.active { display: block; }
+@keyframes sectionFade {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.section {
+  background: rgba(255,255,255,0.94);
+  border: 1px solid rgba(255,255,255,0.34);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius-xl);
+  padding: clamp(1.2rem, 3vw, 2.4rem);
+  overflow: hidden;
+}
+.section::before {
+  content: "";
+  display: block;
+  height: 7px;
+  margin: calc(-1 * clamp(1.2rem, 3vw, 2.4rem)) calc(-1 * clamp(1.2rem, 3vw, 2.4rem)) 1.45rem;
+  background: linear-gradient(90deg, var(--accent), var(--cyan), var(--green));
+}
+
+.page-header {
+  position: relative;
+  padding: clamp(1.3rem, 3.2vw, 2.2rem);
+  margin: 0 0 1.8rem;
+  border-radius: var(--radius-xl);
+  color: #fff;
+  background:
+    radial-gradient(circle at 88% 22%, rgba(255,255,255,0.24), transparent 12rem),
+    linear-gradient(135deg, #1d4ed8 0%, #0f766e 58%, #111827 100%);
+  box-shadow: 0 18px 44px rgba(37,99,235,0.24);
+  overflow: hidden;
+}
+.page-header::after {
+  content: "</>";
+  position: absolute;
+  right: 1.35rem;
+  bottom: -1.25rem;
+  color: rgba(255,255,255,0.12);
+  font-size: clamp(5rem, 11vw, 9rem);
+  font-weight: 900;
+  letter-spacing: -0.12em;
+}
+.lesson-tag {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.34rem 0.7rem;
+  border-radius: 999px;
+  color: #e0f2fe;
+  background: rgba(15,23,42,0.42);
+  border: 1px solid rgba(255,255,255,0.18);
+  font-size: 0.72rem;
+  font-weight: 900;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.lesson-tag::before { content: "Capstone"; display: none; }
+.page-header h1 {
+  position: relative;
+  z-index: 1;
+  margin: 0.75rem 0 0.3rem;
+  max-width: 830px;
+  color: #fff;
+  font-size: clamp(2rem, 4.5vw, 4.3rem);
+  line-height: 0.98;
+  letter-spacing: -0.07em;
+}
+.page-subtitle {
+  position: relative;
+  z-index: 1;
+  max-width: 850px;
+  margin: 0.7rem 0 0;
+  color: #dbeafe;
+  font-size: clamp(1rem, 1.5vw, 1.18rem);
+  line-height: 1.55;
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin: 2.1rem 0 0.75rem;
+  color: #0f172a;
+  font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+}
+h2::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 0.68rem;
+  height: 1.55rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, var(--accent), var(--cyan));
+  box-shadow: 0 8px 18px rgba(37,99,235,0.22);
+}
+h3 { color: #111827; letter-spacing: -0.018em; }
+p { margin: 0.65rem 0 1rem; }
+ul, ol { padding-left: 1.35rem; }
+li { margin: 0.22rem 0; }
+strong { color: #0f172a; }
+
+/* -------------------- Cards and grids -------------------- */
+.studio-grid, .track-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 1.1rem 0 1.4rem;
+}
+.studio-card, .track-card, .download-card, .proposal-field {
+  position: relative;
+  background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 1.2rem 1.25rem;
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+.studio-card::before, .track-card::before, .download-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--accent), var(--cyan));
+}
+.studio-card strong {
+  display: block;
+  color: #0f172a;
+  font-size: 1.02rem;
+  margin-bottom: 0.3rem;
+}
+.studio-card p, .studio-card li, .track-card p, .track-card li {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+.track-card.track-2d::before { background: linear-gradient(90deg, var(--accent), var(--cyan)); }
+.track-card.track-3d::before { background: linear-gradient(90deg, var(--green), #22c55e); }
+.track-card.track-open::before { background: linear-gradient(90deg, var(--purple), var(--pink)); }
+.track-card h3 { margin: 0.25rem 0 0.55rem; font-size: 1.2rem; }
+.track-card h3.t2d { color: var(--accent-light); }
+.track-card h3.t3d { color: var(--green); }
+.track-card h3.topen { color: var(--purple); }
+.track-card[style*="grid-column"] { min-height: 0; }
+
+/* -------------------- Outcome and callout boxes -------------------- */
+.outcome-box {
+  position: relative;
+  margin: 1rem 0 1.35rem;
+  padding: 1rem 1.1rem 1rem 1.15rem;
+  background:
+    linear-gradient(135deg, rgba(219,234,254,0.95), rgba(207,250,254,0.7));
+  border: 1px solid #bfdbfe;
+  border-left: 6px solid var(--accent);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 10px 28px rgba(37,99,235,0.10);
+}
+.outcome-label, .callout-label, .proposal-label {
+  margin-bottom: 0.45rem;
+  color: #1e3a8a;
+  font-size: 0.72rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+}
+.outcome-box p, .outcome-box li { color: #334155; font-size: 0.92rem; }
+.outcome-box ul { margin: 0.2rem 0 0; padding-left: 1.25rem; }
+.outcome-code {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.35rem;
+  padding: 0.06rem 0.38rem;
+  border-radius: 999px;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  color: #1d4ed8;
+  font-weight: 950;
+  white-space: nowrap;
+}
+.callout {
+  position: relative;
+  margin: 1.15rem 0 1.35rem;
+  padding: 1rem 1.15rem;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  background: #f8fafc;
+  box-shadow: var(--shadow-soft);
+}
+.callout p:last-child, .callout ul:last-child { margin-bottom: 0; }
+.callout::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  background: var(--accent);
+}
+.callout.why { background: linear-gradient(135deg, #eff6ff, #ffffff); border-color: #bfdbfe; }
+.callout.why::before { background: var(--accent); }
+.callout.warn { background: linear-gradient(135deg, #fff7ed, #ffffff); border-color: #fed7aa; }
+.callout.warn::before { background: var(--orange); }
+.callout.warn .callout-label { color: #9a3412; }
+.callout.check { background: linear-gradient(135deg, #f0fdf4, #ffffff); border-color: #bbf7d0; }
+.callout.check::before { background: var(--green); }
+.callout.check .callout-label { color: #166534; }
+.callout.next { background: linear-gradient(135deg, #f5f3ff, #ffffff); border-color: #ddd6fe; }
+.callout.next::before { background: var(--purple); }
+.callout.next .callout-label { color: #5b21b6; }
+.callout.godot { background: linear-gradient(135deg, #ecfeff, #ffffff); border-color: #a5f3fc; }
+.callout.godot::before { background: var(--cyan); }
+.callout.godot .callout-label { color: #155e75; }
+
+/* -------------------- Tables -------------------- */
+.table-wrap { overflow-x: auto; }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0 1.4rem;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+  background: #fff;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-soft);
+}
+th {
+  padding: 0.78rem 0.85rem;
+  text-align: left;
+  color: #eaf2ff;
+  background: linear-gradient(135deg, #1e3a8a, #0f766e);
+  border-right: 1px solid rgba(255,255,255,0.16);
+  font-size: 0.74rem;
+  font-weight: 950;
+  text-transform: uppercase;
+  letter-spacing: 0.075em;
+}
+th:last-child { border-right: none; }
+td {
+  padding: 0.82rem 0.88rem;
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  vertical-align: top;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+td:last-child { border-right: none; }
+tr:last-child td { border-bottom: none; }
+tbody tr:nth-child(even) td { background: #f8fafc; }
+.scope-table .ok { color: var(--green); font-weight: 900; }
+.scope-table .warn-scope { color: var(--orange); font-weight: 900; }
+.scope-table .no { color: var(--red); font-weight: 900; }
+.axis-table td:first-child, .scope-table td:first-child { font-weight: 780; color: #0f172a; }
+
+.rubric-table { font-size: 0.86rem; }
+.rubric-table th:first-child { width: 18%; }
+.rubric-table .criterion { font-weight: 900; color: #0f172a; }
+.rubric-table .criterion small { color: var(--text-muted) !important; }
+.rubric-table .level-header { text-align: center; }
+.rubric-table .level-header.l4 { background: linear-gradient(135deg, #166534, #16a34a); color: #fff; }
+.rubric-table .level-header.l3 { background: linear-gradient(135deg, #1d4ed8, #0891b2); color: #fff; }
+.rubric-table .level-header.l2 { background: linear-gradient(135deg, #c2410c, #f97316); color: #fff; }
+.rubric-table .level-header.l1 { background: linear-gradient(135deg, #991b1b, #dc2626); color: #fff; }
+.rubric-table .level-4 { background: #f0fdf4; }
+.rubric-table .level-3 { background: #eff6ff; }
+.rubric-table .level-2 { background: #fff7ed; }
+.rubric-table .level-1 { background: #fef2f2; }
+
+/* -------------------- Proposal, downloads, resources -------------------- */
+.download-card {
+  border-top: none;
+  background:
+    radial-gradient(circle at 92% 15%, rgba(34,197,94,0.18), transparent 10rem),
+    linear-gradient(135deg, #f8fafc, #ffffff);
+}
+.download-card::before { background: linear-gradient(90deg, var(--green), var(--cyan)); }
+.download-card a.download-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.45rem;
+  margin-top: 0.45rem;
+  padding: 0.75rem 1rem;
+  border-radius: 999px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), var(--cyan));
+  text-decoration: none;
+  font-weight: 950;
+  box-shadow: 0 12px 22px rgba(37,99,235,0.22);
+}
+.download-card a.download-button::before { content: "⬇"; }
+.download-card a.download-button:hover { filter: brightness(1.03); transform: translateY(-1px); }
+.resource-list .studio-card::before { background: linear-gradient(90deg, var(--purple), var(--cyan)); }
+.resource-list a { color: var(--accent-light); font-weight: 900; }
+.resource-note, .proposal-hint { color: var(--text-muted); font-size: 0.86rem; }
+.proposal-blank {
+  min-height: 1.7rem;
+  border-bottom: 1px dashed var(--border-strong);
+  margin-top: 0.25rem;
+}
+
+.template-box {
+  margin: 1rem 0 1.4rem;
+  padding: 1.1rem 1.2rem;
+  border-radius: var(--radius-lg);
+  color: #dbeafe;
+  background:
+    radial-gradient(circle at 92% 12%, rgba(6,182,212,0.16), transparent 10rem),
+    linear-gradient(135deg, #0f172a, #111827);
+  border: 1px solid var(--code-border);
+  box-shadow: var(--shadow-soft);
+}
+.template-box h3 { color: #fff; margin-top: 0; }
+.template-box p, .template-box li { color: #dbeafe; }
+.template-box code {
+  display: inline;
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.12);
+  color: #e0f2fe;
+  white-space: normal;
+}
+
+/* -------------------- Nice visual details -------------------- */
+.section p + .studio-grid, .section p + .track-grid { margin-top: 0.7rem; }
+.section > :last-child { margin-bottom: 0; }
+hr { border: none; border-top: 1px solid var(--border); margin: 1.5rem 0; }
+::selection { background: #bfdbfe; color: #0f172a; }
+
+/* -------------------- Responsive -------------------- */
+@media (max-width: 980px) {
+  .page-wrap {
+    grid-template-columns: 1fr;
+    padding: 0.85rem;
+  }
+  .sidebar {
+    position: relative;
+    top: auto;
+    height: auto;
+    max-height: none;
+  }
+  .sidebar nav {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .main { padding-bottom: 1.5rem; }
+}
+@media (max-width: 720px) {
+  .studio-grid, .track-grid { grid-template-columns: 1fr; }
+  .sidebar nav { grid-template-columns: 1fr; }
+  .section { padding: 1rem; border-radius: 18px; }
+  .section::before { margin: -1rem -1rem 1rem; }
+  .page-header { padding: 1.2rem; border-radius: 18px; }
+  table { display: block; overflow-x: auto; white-space: normal; }
+  th, td { min-width: 160px; }
+}
+@media print {
+  body { background: #fff; }
+  body::before, .sidebar, .section::before, .page-header::after { display: none !important; }
+  .page-wrap { display: block; padding: 0; }
+  .section { display: block !important; box-shadow: none; border: none; page-break-after: always; }
+  a { color: #000; }
+}
+
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+  <aside class="sidebar">
+    <div class="sidebar-logo">CP12 Capstone Godot</div>
+    <div class="sidebar-sub">Grado 12 · Proyecto de Estudio de Videojuegos</div>
+    <div class="sidebar-section-label">Guía del Capstone</div>
+    <nav>
+      <a class="active" data-section="overview" href="#"><span class="nav-num">★</span>Vista general</a>
+      <a data-section="studio" href="#"><span class="nav-num">1</span>Modelo de estudio</a>
+      <a data-section="collab" href="#"><span class="nav-num">GIT</span>Colaboración</a>
+      <a data-section="site" href="#"><span class="nav-num">2</span>Google Site</a>
+      <a data-section="logs" href="#"><span class="nav-num">3</span>Registros diarios</a>
+      <a data-section="ai" href="#"><span class="nav-num">AI</span>Reglas de IA</a>
+      <a data-section="resources" href="#"><span class="nav-num">R</span>Recursos gratis</a>
+      <a data-section="tracks" href="#"><span class="nav-num">4</span>Escoge tu ruta</a>
+      <a data-section="proposal" href="#"><span class="nav-num">5</span>Propuesta</a>
+      <a data-section="scope" href="#"><span class="nav-num">6</span>Alcance</a>
+      <a data-section="presentation" href="#"><span class="nav-num">7</span>Demo Game Jam</a>
+      <a data-section="rubric" href="#"><span class="nav-num">8</span>Rúbrica</a>
+      <a data-section="checklist" href="#"><span class="nav-num">9</span>Lista final</a>
+    </nav>
+  </aside>
+
+  <main class="main">
+
+    <section class="section active" id="section-overview">
+      <div class="page-header">
+        <span class="lesson-tag capstone">Proyecto Capstone</span>
+        <h1>Capstone de Estudio de Videojuegos</h1>
+        <p class="page-subtitle">Trabaja como un pequeño estudio para diseñar, construir, documentar, probar, publicar y presentar un juego original hecho en Godot.</p>
+      </div>
+
+      <div class="outcome-box">
+        <div class="outcome-label">Resultados de CP12 evidenciados en esta sección</div>
+        <ul>
+          <li><span class="outcome-code">4.1</span> analizar un problema</li>
+          <li><span class="outcome-code">4.5</span> construir y publicar una solución</li>
+          <li><span class="outcome-code">4.6</span> crear documentación del proyecto</li>
+          <li><span class="outcome-code">4.8</span> presentar la solución</li>
+          <li><span class="outcome-code">4.9</span> reflexionar sobre la solución, el proceso y el aprendizaje</li>
+        </ul>
+      </div>
+
+      <h2>¿Qué es el capstone?</h2>
+      <p>El capstone es un <strong>proyecto de game jam en equipo</strong> usando Godot 4. Tu equipo escogerá una idea pequeña de juego, definirá roles, creará un prototipo funcional, publicará un portafolio en Google Site, completará registros diarios de progreso y presentará el juego terminado a la clase.</p>
+      <p>El objetivo no es crear un videojuego enorme. El objetivo es demostrar que puedes usar partes del sistema de Godot, trabajar con otros, usar recursos de manera responsable, explicar tu código y reflexionar sobre tu proceso.</p>
+
+      <div class="callout why">
+        <div class="callout-label">¿Por qué un proyecto tipo estudio?</div>
+        <p>Computer Programming 12 te pide planificar un proyecto realista, colaborar, escoger recursos, construir una solución, documentar el trabajo, probar, mejorar, presentar y reflexionar. Un pequeño estudio de videojuegos permite demostrar todo eso en un solo proyecto significativo.</p>
+      </div>
+
+      <h2>Evidencia requerida</h2>
+      <div class="studio-grid">
+        <div class="studio-card"><strong>Propuesta DOCX</strong><p>Plantilla completa de propuesta del equipo, enlazada desde tu Google Site antes de empezar el desarrollo serio. <a href="https://docs.google.com/document/d/1bm-wXMLSOdGR_Bn9Qi6ioLSiJUqFXFsOaAbjZS1LKlI/edit?usp=sharing">Abrir la plantilla</a>.</p></div>
+        <div class="studio-card"><strong>Juego jugable en Godot</strong><p>Un juego pequeño 2D o 3D con acción del jugador, desafío, retroalimentación, dos escenas de juego jugables y una condición de ganar, perder o terminar.</p></div>
+        <div class="studio-card"><strong>Google Site publicado</strong><p>Tu portafolio público: equipo, pitch, plan, registros diarios, capturas, uso de IA, pruebas y reflexión final.</p></div>
+        <div class="studio-card"><strong>Registros diarios de desarrollo</strong><p>Cada estudiante registra lo que hizo, qué cambió, qué problema encontró, qué IA o recursos usó y cuál es el siguiente paso.</p></div>
+        <div class="studio-card"><strong>Presentación Game Jam</strong><p>El equipo demuestra el juego en vivo y cada estudiante responde preguntas sobre código, decisiones de diseño, uso de IA y contribución personal.</p></div>
+      </div>
+
+      <h2>Resumen de la línea de tiempo</h2>
+      <table class="axis-table">
+        <thead><tr><th>Fase</th><th>Qué haces</th><th>Entrega</th></tr></thead>
+        <tbody>
+          <tr><td>Preparar el estudio</td><td>Formar equipo, escoger roles, crear Google Site y entregar la URL al registro de clase.</td><td>URL publicada del sitio</td></tr>
+          <tr><td>Pitch + plan</td><td>Escoger ruta, escribir propuesta, definir el juego mínimo viable y asignar tareas.</td><td>Propuesta aprobada</td></tr>
+          <tr><td>Prototipo</td><td>Construir el bucle principal: acción del jugador, desafío y ganar/perder.</td><td>Versión jugable #1</td></tr>
+          <tr><td>Desarrollo</td><td>Añadir funciones requeridas, probar, documentar y revisar el plan.</td><td>Versión jugable #2 + registros</td></tr>
+          <tr><td>Game Jam</td><td>Publicar evidencia final, demostrar el juego y responder preguntas.</td><td>Demo en vivo + preguntas</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout godot">
+        <div class="callout-label">Qué significa “terminado” en este curso</div>
+        <p>Un juego está terminado cuando inicia, el jugador puede interactuar, algo interesante ocurre, el jugador puede pasar por al menos dos escenas o áreas jugables, y el juego termina o se repite. No necesitas música profesional, menú complejo, opciones o sistema de guardado. Primero termina el bucle principal; después agrega pulido.</p>
+      </div>
+    </section>
+
+    <section class="section" id="section-studio">
+      <div class="page-header"><span class="lesson-tag capstone">Capstone · Paso 1</span><h1>Modelo de Estudio</h1><p class="page-subtitle">Construyan como equipo, pero demuestren su propio aprendizaje. El grupo posee el juego; cada estudiante posee su contribución.</p></div>
+      <div class="outcome-box"><div class="outcome-label">Resultados de CP12</div><ul><li><span class="outcome-code">3.1</span> trabajar individualmente y en colaboración</li><li><span class="outcome-code">4.2</span> desarrollar un plan con roles, recursos, pasos y fechas</li><li><span class="outcome-code">4.3</span> demostrar habilidades de colaboración</li><li><span class="outcome-code">4.10</span> explorar roles y carreras en tecnología</li></ul></div>
+
+      <h2>Tamaño del equipo</h2>
+      <p>Los equipos normalmente deben tener <strong>2 a 4 estudiantes</strong>. Un proyecto individual solo se permite con aprobación del profesor. No es una versión más fácil: simplemente necesita un alcance más pequeño y evidencia clara.</p>
+
+      <div class="callout warn"><div class="callout-label">Regla del proyecto en grupo</div><p>El equipo puede recibir una calificación compartida por el producto, pero cada estudiante también será evaluado individualmente por registros diarios, explicación de código, respuestas en la presentación y contribución documentada.</p></div>
+
+      <h2>Los roles del estudio</h2>
+      <div class="studio-grid">
+        <div class="studio-card"><strong>Productor/a</strong><p>Coordina el concepto, lidera reuniones rápidas, mantiene el plan actualizado, controla el alcance y ayuda a dirigir la presentación final.</p></div>
+        <div class="studio-card"><strong>Programador/a</strong><p>Programa movimiento, mecánicas principales, colisiones, lógica de ganar/perder y depuración. Es el rol técnico central.</p></div>
+        <div class="studio-card"><strong>Artista</strong><p>Crea referencias, estilo visual, sprites, materiales o recursos visuales listos para usar en Godot.</p></div>
+        <div class="studio-card"><strong>Constructor/a de niveles</strong><p>Diseña niveles, construye escenas jugables, crea progresión de dificultad y prueba elementos interactivos.</p></div>
+        <div class="studio-card"><strong>Diseñador/a de sonido</strong><p>Crea o busca música y efectos, mantiene un estilo de audio e integra sonidos en el juego. Este rol funciona mejor en equipos grandes.</p></div>
+      </div>
+
+      <div class="callout warn"><div class="callout-label">Requisito de programación</div><p>Este es un curso de programación. Cada estudiante debe crear y poder explicar al menos un archivo completo de GDScript. Tu rol decide qué tipo de script haces; no te excluye de programar.</p></div>
+
+      <h2>Script requerido por rol</h2>
+      <table class="scope-table">
+        <thead><tr><th>Rol</th><th>Script requerido</th><th>Conceptos que demuestra</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Productor/a</strong></td><td>Script de interfaz: puntaje, vida, pantalla de ganar/perder.</td><td><code>Label.text</code>, variables de estado, señales, cambio de escena.</td></tr>
+          <tr><td><strong>Programador/a</strong></td><td>Movimiento del jugador y una mecánica adicional.</td><td><code>velocity</code>, <code>move_and_slide()</code>, entrada, colisión.</td></tr>
+          <tr><td><strong>Artista</strong></td><td>Script de animación: idle, correr, saltar y dirección.</td><td><code>@onready</code>, <code>play()</code>, lógica if/elif, estados.</td></tr>
+          <tr><td><strong>Constructor/a de niveles</strong></td><td>Script de escena interactiva: peligro, objeto, puerta o transición.</td><td><code>Area2D</code>, <code>body_entered</code>, <code>queue_free()</code>, cambio de escena.</td></tr>
+          <tr><td><strong>Sonido</strong></td><td>Script de audio conectado a eventos del juego.</td><td>Señales, <code>play()</code>, <code>stop()</code>, lógica condicional.</td></tr>
+        </tbody>
+      </table>
+
+      <h2>Reunión rápida diaria</h2>
+      <ol><li>¿Qué terminamos la clase pasada?</li><li>¿Qué estamos construyendo hoy?</li><li>¿Qué está bloqueado o confuso?</li></ol>
+    </section>
+
+    <section class="section" id="section-collab">
+      <div class="page-header"><span class="lesson-tag capstone">Capstone · Estudio</span><h1>Colaboración del Equipo</h1><p class="page-subtitle">Godot no funciona como Google Docs. Aquí está la forma segura de compartir archivos sin borrar el trabajo de otros.</p></div>
+
+      <div class="callout warn"><div class="callout-label">Por qué Godot no se comparte como Google Docs</div><p>En Google Docs varias personas editan al mismo tiempo. En Godot, los archivos de escenas (<code>.tscn</code>) y scripts (<code>.gd</code>) se guardan localmente. Si dos personas editan el mismo archivo y ambos lo guardan, una versión puede reemplazar a la otra.</p></div>
+
+      <h2>La regla principal</h2>
+      <p><strong>Cada integrante es dueño de archivos específicos.</strong> Solo editas tus archivos asignados. No abras, muevas ni renombres archivos de otra persona sin permiso.</p>
+
+      <h2>Escoge un sistema</h2>
+      <div class="studio-grid">
+        <div class="studio-card"><strong>Opción 1: Carpeta compartida de Google Drive</strong><p>Más simple. No requiere cuentas nuevas. El productor combina los archivos al inicio o final de clase. Es ideal para equipos nuevos.</p></div>
+        <div class="studio-card"><strong>Opción 2: GitHub en navegador</strong><p>Más profesional. Tiene historial de versiones y muestra quién cambió qué. Requiere una cuenta gratis de GitHub.</p></div>
+      </div>
+
+      <table class="scope-table">
+        <thead><tr><th>Sistema</th><th>Ventajas</th><th>Cuidado</th></tr></thead>
+        <tbody>
+          <tr><td>Google Drive</td><td>Fácil, rápido, sin instalación.</td><td>No tiene control de versiones real. Necesita reglas claras.</td></tr>
+          <tr><td>GitHub</td><td>Historial, commits, práctica profesional.</td><td>Necesita más pasos y atención al subir cambios.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout check"><div class="callout-label">Recomendación</div><p>Empieza con Google Drive si tu equipo quiere rapidez. Usa GitHub si quieres practicar una herramienta profesional y tener un historial completo del proyecto.</p></div>
+    </section>
+
+    <section class="section" id="section-site">
+      <div class="page-header"><span class="lesson-tag capstone">Capstone · Paso 2</span><h1>Portafolio en Google Site</h1><p class="page-subtitle">Tu equipo debe publicar un Google Site y entregar la URL al registro de clase.</p></div>
+      <div class="outcome-box"><div class="outcome-label">Resultados de CP12</div><ul><li><span class="outcome-code">3.2</span> crear una interfaz usando principios de diseño</li><li><span class="outcome-code">4.6</span> crear documentación</li><li><span class="outcome-code">4.8</span> presentar la solución</li></ul></div>
+
+      <h2>Páginas requeridas</h2>
+      <div class="studio-grid">
+        <div class="studio-card"><strong>Inicio / Pitch</strong><p>Título del juego, una frase de presentación, miembros, ruta, público y una imagen o captura.</p></div>
+        <div class="studio-card"><strong>Plan del proyecto</strong><p>Propuesta aprobada, roles, juego mínimo viable, metas extra, línea de tiempo y sprint actual.</p></div>
+        <div class="studio-card"><strong>Registros diarios</strong><p>Entrada de cada clase para cada estudiante.</p></div>
+        <div class="studio-card"><strong>Evidencia de construcción</strong><p>Capturas o videos cortos de las dos escenas jugables, fragmentos de código, pruebas y bugs corregidos.</p></div>
+        <div class="studio-card"><strong>IA + recursos</strong><p>Prompts, resúmenes de IA, código aceptado/rechazado, documentación de Godot y enlaces usados.</p></div>
+        <div class="studio-card"><strong>Reflexión final</strong><p>Qué cambió del plan, qué contribuyó cada estudiante, qué aprendieron y qué mejorarían.</p></div>
+      </div>
+
+      <div class="callout check"><div class="callout-label">Chequeo del sitio</div><ul><li>La URL publicada abre sin pedir acceso.</li><li>Los roles del equipo son visibles.</li><li>La página de registros diarios existe desde el inicio.</li><li>La página de IA + recursos existe antes de usar IA.</li></ul></div>
+    </section>
+
+    <section class="section" id="section-logs">
+      <div class="page-header"><span class="lesson-tag capstone">Capstone · Paso 3</span><h1>Registros Diarios de Desarrollo</h1><p class="page-subtitle">El registro diario es tu prueba del proceso. Protege el trabajo honesto y hace visible el uso de IA.</p></div>
+      <h2>Cada estudiante, cada clase</h2>
+      <p>Cada estudiante completa una entrada antes de salir de clase. El equipo puede hablar sobre el trabajo, pero cada estudiante escribe su propia evidencia.</p>
+
+      <div class="template-box">
+        <h3>Preguntas del registro diario</h3>
+        <ol>
+          <li>¿En qué trabajé hoy?</li>
+          <li>¿Qué cambió en el juego, sitio, arte, nivel, sonido o código?</li>
+          <li>¿Qué evidencia creé? Enlace a captura, código, commit o actualización del sitio.</li>
+          <li>¿Qué problema o bloqueo encontré?</li>
+          <li>¿Cómo intenté resolverlo?</li>
+          <li>¿Usé IA hoy? Si sí, pega el prompt o resume la ayuda exacta.</li>
+          <li>¿Cuál es mi próxima tarea?</li>
+          <li>Chequeo de confianza: verde, amarillo o rojo.</li>
+        </ol>
+      </div>
+
+      <h2>Lo que cuenta como buena evidencia</h2>
+      <table class="scope-table">
+        <thead><tr><th>Evidencia fuerte</th><th>Evidencia débil</th></tr></thead>
+        <tbody>
+          <tr><td>“Agregué colisión al jugador y corregí el bug donde atravesaba el piso. Captura incluida.”</td><td>“Trabajé en el juego.”</td></tr>
+          <tr><td>“Probé la transición a Level 2. Falló por una ruta incorrecta y la corregí.”</td><td>“Arreglé cosas.”</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section" id="section-ai">
+      <div class="page-header"><span class="lesson-tag capstone">Capstone · IA</span><h1>Reglas de IA + Recursos</h1><p class="page-subtitle">Puedes usar IA como apoyo, pero debes entender y explicar todo lo que entregas.</p></div>
+
+      <div class="callout warn"><div class="callout-label">Regla central</div><p>La IA puede ayudarte a aprender, explicar errores, generar ideas o revisar código. No puede reemplazar tu pensamiento. Si no puedes explicar el código durante la demo, ese código no cuenta como evidencia fuerte de aprendizaje.</p></div>
+
+      <h2>Uso permitido</h2>
+      <ul>
+        <li>Pedir explicación de un error.</li>
+        <li>Pedir que explique una función de Godot.</li>
+        <li>Generar ideas para mecánicas pequeñas.</li>
+        <li>Comparar dos formas de resolver un problema.</li>
+        <li>Pedir ayuda para comentar o entender tu propio código.</li>
+      </ul>
+
+      <h2>No permitido</h2>
+      <ul>
+        <li>Copiar un juego completo generado por IA.</li>
+        <li>Entregar código que no puedes explicar.</li>
+        <li>Ocultar el uso de IA.</li>
+        <li>Usar IA para crear evidencia falsa, capturas falsas o registros diarios falsos.</li>
+      </ul>
+
+      <div class="template-box">
+        <h3>Formato para registrar IA</h3>
+        <p><strong>Prompt usado:</strong> “...”<br><strong>Respuesta útil:</strong> qué parte ayudó.<br><strong>Lo que cambié:</strong> qué modificaste antes de usarlo.<br><strong>Lo que entiendo:</strong> explica el código en tus palabras.</p>
+      </div>
+    </section>
+
+    <section class="section" id="section-resources">
+      <div class="page-header"><span class="lesson-tag capstone">Capstone · Recursos</span><h1>Recursos Gratis de Godot y Assets</h1><p class="page-subtitle">Usa recursos legales, gratuitos y apropiados. Registra todo lo que uses.</p></div>
+
+      <div class="studio-grid resource-list">
+        <div class="studio-card"><strong>Documentación de Godot</strong><p><a href="https://docs.godotengine.org/en/stable/">Abrir Godot Docs</a> — documentación oficial.</p></div>
+        <div class="studio-card"><strong>Lecciones paso a paso</strong><p><a href="https://docs.godotengine.org/en/stable/getting_started/step_by_step/">Abrir Step-by-Step Lessons</a> — tutoriales oficiales para empezar.</p></div>
+        <div class="studio-card"><strong>Asset Library de Godot</strong><p><a href="https://godotengine.org/asset-library/">Abrir Godot Asset Library</a> — complementos y ejemplos.</p></div>
+        <div class="studio-card"><strong>Kenney Assets</strong><p><a href="https://kenney.nl/assets">Abrir Kenney</a> — excelentes recursos gratuitos para juegos.</p></div>
+        <div class="studio-card"><strong>itch.io Free Assets</strong><p><a href="https://itch.io/game-assets/free">Abrir itch.io</a> — recursos gratuitos creados por la comunidad.</p></div>
+        <div class="studio-card"><strong>OpenGameArt</strong><p><a href="https://opengameart.org/">Abrir OpenGameArt</a> — arte y audio para juegos.</p></div>
+        <div class="studio-card"><strong>Freesound</strong><p><a href="https://freesound.org/browse/">Abrir Freesound</a> — efectos de sonido. Revisa la licencia.</p></div>
+        <div class="studio-card"><strong>Pixabay Sound Effects</strong><p><a href="https://pixabay.com/sound-effects/">Abrir Pixabay</a> — efectos de sonido gratuitos.</p></div>
+      </div>
+
+      <div class="callout warn"><div class="callout-label">Regla de recursos</div><p>No uses assets encontrados al azar en Google Images. Debes poder mostrar de dónde salió cada recurso y si está permitido usarlo.</p></div>
+    </section>
+
+    <section class="section" id="section-tracks">
+      <div class="page-header"><span class="lesson-tag capstone">Capstone · Paso 4</span><h1>Escoge tu Ruta</h1><p class="page-subtitle">Escoge un tipo de proyecto que tu equipo pueda terminar bien, no solo una idea que suene grande.</p></div>
+
+      <div class="track-grid">
+        <div class="track-card track-2d"><h3 class="t2d">Ruta 2D</h3><p>Juego de plataformas, laberinto, top-down, puzzle, arcade o survival simple. Recomendado para la mayoría de los equipos.</p><ul><li>Movimiento claro</li><li>Objetos o enemigos</li><li>Dos escenas jugables</li><li>Ganar, perder o completar</li></ul></div>
+        <div class="track-card track-3d"><h3 class="t3d">Ruta 3D</h3><p>Experiencia 3D pequeña: exploración, recolección, obstáculo o puzzle. Requiere más cuidado con cámara, movimiento y escala.</p><ul><li>Movimiento 3D controlado</li><li>Escenario simple</li><li>Interacción clara</li><li>Alcance pequeño</li></ul></div>
+        <div class="track-card track-open" style="grid-column:1/-1;"><h3 class="topen">Ruta abierta aprobada</h3><p>Una idea diferente puede ser aprobada si el equipo demuestra que el alcance es realista y que todos tendrán evidencia de programación.</p></div>
+      </div>
+
+      <div class="callout warn"><div class="callout-label">Consejo importante</div><p>Un juego pequeño terminado es mucho mejor que una idea enorme sin terminar. Primero crea una versión simple que funcione. Luego agrega mejoras.</p></div>
+    </section>
+
+    <section class="section" id="section-proposal">
+      <div class="page-header"><span class="lesson-tag capstone">Capstone · Paso 5</span><h1>Propuesta de Diseño del Equipo</h1><p class="page-subtitle">La propuesta debe estar aprobada antes de comenzar el desarrollo serio.</p></div>
+
+      <div class="download-card">
+        <strong>Plantilla de propuesta</strong>
+        <p>Completa la propuesta con cuidado. Es mejor entregar una propuesta fuerte y pensada que algo apurado y débil.</p>
+        <a class="download-button" href="https://docs.google.com/document/d/1bm-wXMLSOdGR_Bn9Qi6ioLSiJUqFXFsOaAbjZS1LKlI/edit?usp=sharing">Abrir propuesta DOCX</a>
+      </div>
+
+      <h2>La propuesta debe incluir</h2>
+      <ul>
+        <li>Título del juego y una frase de pitch.</li>
+        <li>Tipo de juego y ruta escogida.</li>
+        <li>Jugabilidad principal: qué hace el jugador.</li>
+        <li>Desafío: qué hace que el juego sea difícil o interesante.</li>
+        <li>Dos escenas jugables planificadas.</li>
+        <li>Roles del equipo y responsabilidades.</li>
+        <li>Recursos que planean usar.</li>
+        <li>Alcance mínimo y metas extra.</li>
+      </ul>
+
+      <div class="callout check"><div class="callout-label">Aprobación</div><p>Tu profesor puede pedir cambios si la idea es demasiado grande, demasiado vaga, no tiene suficiente código o no deja claro qué hará cada estudiante.</p></div>
+    </section>
+
+    <section class="section" id="section-scope">
+      <div class="page-header"><span class="lesson-tag capstone">Capstone · Paso 6</span><h1>Calibrar el Alcance</h1><p class="page-subtitle">El alcance decide si tu proyecto se termina o se queda como una idea incompleta.</p></div>
+
+      <h2>Juego mínimo viable</h2>
+      <p>Tu juego mínimo viable es la versión más pequeña que todavía se siente como un juego. Debe tener jugador, objetivo, desafío, retroalimentación y final o reinicio.</p>
+
+      <table class="scope-table">
+        <thead><tr><th>Elemento</th><th>Correcto</th><th>Demasiado grande</th></tr></thead>
+        <tbody>
+          <tr><td>Escenas</td><td>Dos niveles cortos y jugables.</td><td>Diez mundos, mapa abierto, historia completa.</td></tr>
+          <tr><td>Jugador</td><td>Movimiento simple y una habilidad principal.</td><td>Inventario, armas múltiples, árbol de habilidades.</td></tr>
+          <tr><td>Enemigos</td><td>Un enemigo o peligro simple.</td><td>IA compleja con muchas conductas.</td></tr>
+          <tr><td>Arte</td><td>Assets simples, consistentes y legales.</td><td>Crear todo desde cero con calidad profesional.</td></tr>
+          <tr><td>Menú</td><td>Opcional si el juego ya funciona.</td><td>Menús avanzados antes de tener jugabilidad.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout godot"><div class="callout-label">Orden recomendado</div><ol><li>Jugador se mueve.</li><li>Una mecánica funciona.</li><li>Una escena se puede completar.</li><li>Segunda escena jugable.</li><li>UI básica.</li><li>Pruebas y correcciones.</li><li>Polish visual y sonido.</li></ol></div>
+    </section>
+
+    <section class="section" id="section-presentation">
+      <div class="page-header"><span class="lesson-tag capstone">Capstone · Paso 7</span><h1>Presentación Game Jam</h1><p class="page-subtitle">La presentación no es solo mostrar el juego. También debes defender tu proceso, tu código y tus decisiones.</p></div>
+
+      <h2>Formato de la presentación</h2>
+      <ol>
+        <li>Presenten el título y pitch del juego.</li>
+        <li>Demuestren el juego en vivo.</li>
+        <li>Muestren las dos escenas jugables.</li>
+        <li>Expliquen una decisión importante de diseño.</li>
+        <li>Cada estudiante explica su contribución y un fragmento de código.</li>
+        <li>Respondan preguntas del profesor o la clase.</li>
+      </ol>
+
+      <h2>Preguntas que debes poder responder</h2>
+      <ul>
+        <li>¿Qué archivo de código escribiste tú?</li>
+        <li>¿Qué hace este código?</li>
+        <li>¿Qué problema tuviste y cómo lo resolviste?</li>
+        <li>¿Cómo usaste IA o recursos externos?</li>
+        <li>¿Qué cambiarías si tuvieras más tiempo?</li>
+      </ul>
+    </section>
+
+    <section class="section" id="section-rubric">
+      <div class="page-header"><span class="lesson-tag capstone">Capstone · Paso 8</span><h1>Rúbrica de Evaluación</h1><p class="page-subtitle">La calificación se basa en el producto, la documentación, el proceso y la capacidad de explicar tu trabajo.</p></div>
+
+      <table class="rubric-table">
+        <thead>
+          <tr><th>Criterio</th><th class="level-header l4">4 — Excelente</th><th class="level-header l3">3 — Competente</th><th class="level-header l2">2 — En desarrollo</th><th class="level-header l1">1 — Inicial</th></tr>
+        </thead>
+        <tbody>
+          <tr><td class="criterion">Juego funcional</td><td class="level-4">El juego funciona, tiene dos escenas jugables, objetivo claro, feedback y final.</td><td class="level-3">Funciona con pequeños problemas; la idea es clara.</td><td class="level-2">Partes funcionan, pero el juego está incompleto o confuso.</td><td class="level-1">No hay juego jugable claro.</td></tr>
+          <tr><td class="criterion">Código y explicación</td><td class="level-4">El estudiante explica su código con confianza y conecta conceptos.</td><td class="level-3">Explica su código principal con algunas dudas menores.</td><td class="level-2">Explicación limitada; depende demasiado de otros o de IA.</td><td class="level-1">No puede explicar el código entregado.</td></tr>
+          <tr><td class="criterion">Documentación</td><td class="level-4">Google Site completo, registros diarios claros, evidencia visual y pruebas.</td><td class="level-3">Documentación mayormente completa.</td><td class="level-2">Documentación incompleta o poco específica.</td><td class="level-1">Falta documentación importante.</td></tr>
+          <tr><td class="criterion">Colaboración</td><td class="level-4">Roles claros, comunicación fuerte y contribuciones equilibradas.</td><td class="level-3">Buen trabajo en equipo con problemas menores.</td><td class="level-2">Participación desigual o roles poco claros.</td><td class="level-1">Poca evidencia de colaboración efectiva.</td></tr>
+          <tr><td class="criterion">Reflexión</td><td class="level-4">Reflexión honesta, específica y conectada al aprendizaje.</td><td class="level-3">Reflexión clara con ejemplos.</td><td class="level-2">Reflexión superficial.</td><td class="level-1">Reflexión ausente o mínima.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="section" id="section-checklist">
+      <div class="page-header"><span class="lesson-tag capstone">Capstone · Paso 9</span><h1>Lista de Entrega Final</h1><p class="page-subtitle">Antes de presentar, asegúrate de que todo esté listo y visible.</p></div>
+
+      <div class="callout check"><div class="callout-label">Antes de construir</div><ul><li>CodeHS completado.</li><li>Battleship o Tic Tac Toe terminado y entregado.</li><li>Propuesta completa y aprobada.</li><li>Sitio del capstone leído con cuidado.</li></ul></div>
+
+      <h2>Entrega final del equipo</h2>
+      <ul>
+        <li>Google Site publicado y accesible.</li>
+        <li>Propuesta enlazada.</li>
+        <li>Juego de Godot jugable.</li>
+        <li>Dos escenas de juego jugables.</li>
+        <li>Capturas o clips del juego.</li>
+        <li>Registros diarios completos.</li>
+        <li>Registro de IA y recursos.</li>
+        <li>Reflexión final.</li>
+      </ul>
+
+      <h2>Entrega individual</h2>
+      <ul>
+        <li>Tu registro diario está completo.</li>
+        <li>Puedes explicar tu script.</li>
+        <li>Puedes explicar tu contribución.</li>
+        <li>Puedes responder qué aprendiste y qué mejorarías.</li>
+      </ul>
+
+      <div class="callout warn"><div class="callout-label">Recordatorio final</div><p>Una propuesta fuerte y bien pensada vale más que una idea apresurada. Lee el sitio del capstone antes de pedir ayuda: muchas respuestas ya están aquí.</p></div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+
+   const sectionLinks = document.querySelectorAll('a[data-section]');
+  const navLinks = document.querySelectorAll('.sidebar nav a[data-section]');
+  const sections = document.querySelectorAll('.section');
+
+  function showSection(id) {
+    sections.forEach(s => s.classList.remove('active'));
+    const target = document.getElementById('section-' + id);
+    if (target) target.classList.add('active');
+    navLinks.forEach(a => {
+      a.classList.toggle('active', a.dataset.section === id);
+    });
+    if (history.replaceState) {
+      history.replaceState(null, '', '#' + id);
+    }
+  }
+
+  sectionLinks.forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      showSection(link.dataset.section);
+      window.scrollTo(0, 0);
+    });
+  });
+
+  const initHash = window.location.hash.replace('#', '');
+  if (initHash && document.getElementById('section-' + initHash)) {
+    showSection(initHash);
+  } else {
+    showSection('overview');
+  }
+  
+</script>
+</body>
+</html>
